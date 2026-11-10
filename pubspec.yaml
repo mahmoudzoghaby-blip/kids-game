@@ -1,5 +1,5 @@
 name: kids_game
-description: A new Flutter project for kids.
+description: A new Flutter project for kids
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_tts: ^4.0.2
 
 dev_dependencies:
   flutter_test:
