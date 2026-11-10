@@ -1,4 +1,4 @@
-name: Build Flutter APK
+name: Build APK
 
 on:
   push:
@@ -11,14 +11,16 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
+          flutter-version: 'stable'
           channel: 'stable'
-      - run: flutter create . --platforms=android
       - run: flutter pub get
+      - run: flutter create . --platforms=android
+      - name: Update minSdkVersion
+        run: |
+          sed -i 's/minSdkVersion.*/minSdkVersion 21/g' android/app/build.gradle
       - run: flutter build apk --release
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: app-release
+          name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
           
