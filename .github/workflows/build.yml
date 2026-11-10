@@ -39,11 +39,11 @@ jobs:
           zipStorePath=wrapper/dists
           EOF
 
-          # ضبط الـ namespace والـ minSdkVersion مباشرة داخل build.gradle لضمان عدم وجود أي تعارض
+          # فرض إعدادات الـ namespace و الـ minSdkVersion بقيمة 21 صراحة لتلافي أي تعارض مع الحزم
           BUILD_FILE="android/app/build.gradle"
           if [ -f "$BUILD_FILE" ]; then
             sed -i '0,/android {/{s/android {/android {\n    namespace "com.example.kids_game"/}' "$BUILD_FILE"
-            sed -i 's/minSdkVersion .*/minSdkVersion 21/g' "$BUILD_FILE"
+            sed -i 's/minSdkVersion.*/minSdkVersion 21/g' "$BUILD_FILE"
           fi
 
           chmod +x android/gradlew
@@ -59,4 +59,3 @@ jobs:
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
-          
