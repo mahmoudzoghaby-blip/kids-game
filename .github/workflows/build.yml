@@ -37,9 +37,12 @@ jobs:
           
           mkdir -p android
           touch android/gradle.properties
-          if ! grep -q "flutter.minSdkVersion" android/gradle.properties; then
-            echo "flutter.minSdkVersion=21" >> android/gradle.properties
-          fi
+          echo "flutter.minSdkVersion=21" >> android/gradle.properties
+
+          # فرض minSdkVersion 21 مباشرة داخل ملف build.gradle لمنع أي تعارض
+          if [ -f "android/app/build.gradle" ]; then
+            sed -i 's/minSdkVersion .*/minSdkVersion 21/g' android/app/build.gradle
+          }
 
           if [ -f "android/app/build.gradle" ] && ! grep -q "namespace" android/app/build.gradle; then
             sed -i '/android {/a \    namespace "com.example.kids_game"' android/app/build.gradle
