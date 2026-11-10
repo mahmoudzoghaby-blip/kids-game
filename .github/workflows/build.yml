@@ -25,14 +25,11 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-      - name: Create Android Platform
+      - name: Recreate Clean Android Platform
         run: |
-          if [ ! -d "android" ]; then
-            flutter create . --platforms=android --project-name=kids_game
-          fi
+          rm -rf android
+          flutter create . --platforms=android --project-name=kids_game
 
-      - name: Configure Android Gradle & SDK
-        run: |
           mkdir -p android/gradle/wrapper
           cat << 'EOF' > android/gradle/wrapper/gradle-wrapper.properties
           distributionBase=GRADLE_USER_HOME
@@ -44,9 +41,7 @@ jobs:
 
           mkdir -p android
           touch android/gradle.properties
-          if ! grep -q "flutter.minSdkVersion" android/gradle.properties; then
-            echo "flutter.minSdkVersion=21" >> android/gradle.properties
-          fi
+          echo "flutter.minSdkVersion=21" >> android/gradle.properties
 
           BUILD_FILE="android/app/build.gradle"
           if [ -f "$BUILD_FILE" ] && ! grep -q "namespace" "$BUILD_FILE"; then
@@ -55,8 +50,11 @@ jobs:
 
           chmod +x android/gradlew
 
-      - name: Build APK Release
-        run: flutter build apk --release --no-tree-shake-icons
+      - name: Clean and Build APK Release
+        run: |
+          flutter clean
+          flutter pub get
+          flutter build apk --release --no-tree-shake-icons
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
