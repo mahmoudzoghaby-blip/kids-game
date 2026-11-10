@@ -25,7 +25,7 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-      - name: Recreate Clean Android Platform
+      - name: Recreate Clean Android Platform & Fix SDK
         run: |
           rm -rf android
           flutter create . --platforms=android --project-name=kids_game
@@ -39,13 +39,11 @@ jobs:
           zipStorePath=wrapper/dists
           EOF
 
-          mkdir -p android
-          touch android/gradle.properties
-          echo "flutter.minSdkVersion=21" >> android/gradle.properties
-
+          # ضبط الـ namespace والـ minSdkVersion مباشرة داخل build.gradle لضمان عدم وجود أي تعارض
           BUILD_FILE="android/app/build.gradle"
-          if [ -f "$BUILD_FILE" ] && ! grep -q "namespace" "$BUILD_FILE"; then
+          if [ -f "$BUILD_FILE" ]; then
             sed -i '0,/android {/{s/android {/android {\n    namespace "com.example.kids_game"/}' "$BUILD_FILE"
+            sed -i 's/minSdkVersion .*/minSdkVersion 21/g' "$BUILD_FILE"
           fi
 
           chmod +x android/gradlew
@@ -61,3 +59,4 @@ jobs:
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
+          
