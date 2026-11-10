@@ -25,7 +25,7 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-      - name: Recreate Clean Android Platform & Fix SDK
+      - name: Recreate Clean Android Platform & Fix SDK via Python
         run: |
           rm -rf android
           flutter create . --platforms=android --project-name=kids_game
@@ -39,12 +39,27 @@ jobs:
           zipStorePath=wrapper/dists
           EOF
 
-          # فرض إعدادات الـ namespace و الـ minSdkVersion بقيمة 21 صراحة لتلافي أي تعارض مع الحزم
-          BUILD_FILE="android/app/build.gradle"
-          if [ -f "$BUILD_FILE" ]; then
-            sed -i '0,/android {/{s/android {/android {\n    namespace "com.example.kids_game"/}' "$BUILD_FILE"
-            sed -i 's/minSdkVersion.*/minSdkVersion 21/g' "$BUILD_FILE"
+          mkdir -p android
+          touch android/gradle.properties
+          if ! grep -q "flutter.minSdkVersion" android/gradle.properties; then
+            echo "flutter.minSdkVersion=21" >> android/gradle.properties
           fi
+
+          # استخدام سكريبت بايثون لتعديل ملف build.gradle بدقة تامة ومنع أخطاء الـ sed
+          python3 -c '
+          import re
+          build_path = "android/app/build.gradle"
+          with open(build_path, "r") as f:
+              content = f.read()
+
+          if "namespace" not in content:
+              content = content.replace("android {", "android {\n    namespace \"com.example.kids_game\"")
+
+          content = re.sub(r"minSdkVersion\s+.*", "minSdkVersion 21", content)
+
+          with open(build_path, "w") as f:
+              f.write(content)
+          '
 
           chmod +x android/gradlew
 
