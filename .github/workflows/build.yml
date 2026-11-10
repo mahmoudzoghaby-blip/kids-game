@@ -31,25 +31,32 @@ jobs:
             flutter create . --platforms=android --project-name=kids_game
           fi
 
-      - name: Safe Android Configuration & Gradle Upgrade
+      - name: Configure Android Gradle & SDK
         run: |
-          chmod +x android/gradlew
-          
+          # كتابة ملف إعدادات الجريدل مباشرة لتجنب أي أخطاء في الـ sed وتوافقاً مع Java 17
+          mkdir -p android/gradle/wrapper
+          cat << 'EOF' > android/gradle/wrapper/gradle-wrapper.properties
+          distributionBase=GRADLE_USER_HOME
+          distributionPath=wrapper/dists
+          distributionUrl=https\://services.gradle.org/distributions/gradle-7.6.3-bin.zip
+          zipStoreBase=GRADLE_USER_HOME
+          zipStorePath=wrapper/dists
+          EOF
+
+          # ضبط الـ minSdkVersion
           mkdir -p android
           touch android/gradle.properties
           if ! grep -q "flutter.minSdkVersion" android/gradle.properties; then
             echo "flutter.minSdkVersion=21" >> android/gradle.properties
           fi
 
-          # تحديث إصدار الـ Gradle لتجنب انهيار الترجمة مع Java 17
-          if [ -f "android/gradle/wrapper/gradle-wrapper.properties" ]; then
-            sed -i 's|distributionUrl=.*|distributionUrl=https\\://services.gradle.org\\/distributions\\/gradle-7.6.3-bin.zip|g' android/gradle/wrapper/gradle-wrapper.properties
-          fi
-
+          # إضافة الـ namespace بشكل آمن
           BUILD_FILE="android/app/build.gradle"
           if [ -f "$BUILD_FILE" ] && ! grep -q "namespace" "$BUILD_FILE"; then
             sed -i '0,/android {/{s/android {/android {\n    namespace "com.example.kids_game"/}' "$BUILD_FILE"
           fi
+
+          chmod +x android/gradlew
 
       - name: Build APK Release
         run: flutter build apk --release
