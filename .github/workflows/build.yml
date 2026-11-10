@@ -25,6 +25,9 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
+      - name: Create Android Platform
+        run: flutter create . --platforms=android --project-name=kids_game
+
       - name: Configure Min SDK and App Name
         run: |
           echo "flutter.minSdkVersion=21" >> android/gradle.properties
