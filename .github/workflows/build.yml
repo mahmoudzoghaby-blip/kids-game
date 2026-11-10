@@ -13,16 +13,14 @@ jobs:
         with:
           flutter-version: '3.19.0'
           java-version: '17'
-      - name: Recreate Android Project & Permissions
-        run: |
-          flutter create . --platforms=android --project-name=kids_game
-          chmod +x android/gradlew
+      - name: Recreate Android Project
+        run: flutter create . --platforms=android --project-name=kids_game
       - run: flutter pub get
       - name: Update App Name and minSdkVersion
         run: |
           sed -i 's/minSdkVersion.*/minSdkVersion 21/g' android/app/build.gradle || true
           sed -i 's/android:label="[^"]*"/android:label="ألعاب تعليمية"/g' android/app/src/main/AndroidManifest.xml || true
-      - run: flutter build apk --release
+      - run: flutter build apk --release --stacktrace
       - uses: actions/upload-artifact@v4
         with:
           name: release-apk
