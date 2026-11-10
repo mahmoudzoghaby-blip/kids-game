@@ -31,20 +31,31 @@ jobs:
             flutter create . --platforms=android --project-name=kids_game
           fi
 
-      - name: Fix Android Gradle Settings
+      - name: Fix Android Gradle & Compatibility
         run: |
+          chmod +x android/gradlew
+
+          # ضبط الـ minSdkVersion
+          mkdir -p android
+          touch android/gradle.properties
+          if ! grep -q "flutter.minSdkVersion" android/gradle.properties; then
+            echo "flutter.minSdkVersion=21" >> android/gradle.properties
+          fi
+
+          # تحديث إصدار الـ Gradle للعمل بسلاسة مع Java 17
+          if [ -f "android/gradle/wrapper/gradle-wrapper.properties" ]; then
+            sed -i 's/distributionUrl=.*/distributionUrl=https\\://services.gradle.org\\/distributions\\/gradle-8.0-bin.zip/g' android/gradle/wrapper/gradle-wrapper.properties
+          fi
+
           # إضافة الـ namespace إذا لم يكن موجوداً
-          if ! grep -q "namespace" android/app/build.gradle; then
+          if [ -f "android/app/build.gradle" ] && ! grep -q "namespace" android/app/build.gradle; then
             sed -i '/android {/a \    namespace "com.example.kids_game"' android/app/build.gradle
           fi
-          
-          # ضبط minSdkVersion مباشرة إلى 21 لتجنب أي أخطاء في القراءة
-          sed -i 's/minSdkVersion .*/minSdkVersion 21/g' android/app/build.gradle
-          
-          # تغيير اسم التطبيق في ملف الـ Manifest
-          sed -i 's/android:label="[^"]*"/android:label="ألعاب تعليمية"/g' android/app/src/main/AndroidManifest.xml || true
-          
-          chmod +x android/gradlew
+
+          # تعديل اسم التطبيق في الـ Manifest
+          if [ -f "android/app/src/main/AndroidManifest.xml" ]; then
+            sed -i 's/android:label="[^"]*"/android:label="ألعاب تعليمية"/g' android/app/src/main/AndroidManifest.xml || true
+          fi
 
       - name: Build APK Release
         run: flutter build apk --release
@@ -54,4 +65,3 @@ jobs:
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
-          
