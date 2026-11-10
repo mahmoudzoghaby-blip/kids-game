@@ -26,11 +26,12 @@ jobs:
         run: flutter pub get
 
       - name: Create Android Platform
-        run: flutter create . --platforms=android --project-name=kids_game
+        run: |
+          flutter create . --platforms=android --project-name=kids_game
+          chmod +x android/gradlew
 
       - name: Fix Android Configuration and Namespace
         run: |
-          # إضافة الـ namespace إذا لم يكن موجوداً لتجنب فشل Gradle
           if ! grep -q "namespace" android/app/build.gradle; then
             sed -i '/android {/a \    namespace "com.example.kids_game"' android/app/build.gradle
           fi
@@ -45,4 +46,3 @@ jobs:
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
-          
