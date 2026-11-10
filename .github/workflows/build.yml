@@ -28,8 +28,12 @@ jobs:
       - name: Create Android Platform
         run: flutter create . --platforms=android --project-name=kids_game
 
-      - name: Configure Min SDK and App Name
+      - name: Fix Android Configuration and Namespace
         run: |
+          # إضافة الـ namespace إذا لم يكن موجوداً لتجنب فشل Gradle
+          if ! grep -q "namespace" android/app/build.gradle; then
+            sed -i '/android {/a \    namespace "com.example.kids_game"' android/app/build.gradle
+          fi
           echo "flutter.minSdkVersion=21" >> android/gradle.properties
           sed -i 's/android:label="[^"]*"/android:label="ألعاب تعليمية"/g' android/app/src/main/AndroidManifest.xml || true
 
