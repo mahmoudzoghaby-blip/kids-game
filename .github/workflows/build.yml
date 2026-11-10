@@ -31,26 +31,22 @@ jobs:
             flutter create . --platforms=android --project-name=kids_game
           fi
 
-      - name: Fix Android Configuration
+      - name: Safe Android Configuration
         run: |
           chmod +x android/gradlew
           
+          # تأكد من وجود gradle.properties وإضافة الـ minSdkVersion داخله بأمان
           mkdir -p android
           touch android/gradle.properties
-          
-          # ضبط الـ minSdkVersion بأمان تام عبر ملف الـ properties فقط بدون تعديل build.gradle يدويًا
           if ! grep -q "flutter.minSdkVersion" android/gradle.properties; then
             echo "flutter.minSdkVersion=21" >> android/gradle.properties
           fi
 
-          # إضافة الـ namespace بلطف إذا لم يكن موجوداً
-          if [ -f "android/app/build.gradle" ] && ! grep -q "namespace" android/app/build.gradle; then
-            sed -i '/android {/a \    namespace "com.example.kids_game"' android/app/build.gradle
-          fi
-
-          # تعديل اسم التطبيق
-          if [ -f "android/app/src/main/AndroidManifest.xml" ]; then
-            sed -i 's/android:label="[^"]*"/android:label="ألعاب تعليمية"/g' android/app/src/main/AndroidManifest.xml || true
+          # إضافة الـ namespace بشكل مضمون وسليم
+          BUILD_FILE="android/app/build.gradle"
+          if [ -f "$BUILD_FILE" ] && ! grep -q "namespace" "$BUILD_FILE"; then
+            # وضع الـ namespace بجانب الـ applicationId أو في أعلى ملف build.gradle
+            sed -i '0,/android {/{s/android {/android {\n    namespace "com.example.kids_game"/}' "$BUILD_FILE"
           fi
 
       - name: Build APK Release
