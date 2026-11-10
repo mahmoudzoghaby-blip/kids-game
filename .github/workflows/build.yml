@@ -39,10 +39,9 @@ jobs:
           touch android/gradle.properties
           echo "flutter.minSdkVersion=21" >> android/gradle.properties
 
-          # فرض minSdkVersion 21 مباشرة داخل ملف build.gradle لمنع أي تعارض
           if [ -f "android/app/build.gradle" ]; then
             sed -i 's/minSdkVersion .*/minSdkVersion 21/g' android/app/build.gradle
-          }
+          fi
 
           if [ -f "android/app/build.gradle" ] && ! grep -q "namespace" android/app/build.gradle; then
             sed -i '/android {/a \    namespace "com.example.kids_game"' android/app/build.gradle
