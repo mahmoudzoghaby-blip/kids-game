@@ -12,6 +12,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.19.0'
+          java-version: '17'
       - name: Recreate Android Project
         run: flutter create . --platforms=android --project-name=kids_game
       - run: flutter pub get
