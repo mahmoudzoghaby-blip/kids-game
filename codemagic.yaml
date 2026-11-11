@@ -1,0 +1,13 @@
+workflows:
+  android-workflow:
+    name: Android Workflow
+    environment:
+      flutter: stable
+      java: 17
+    scripts:
+      - name: Build APK
+        script: |
+          flutter build apk --release --no-tree-shake-icons
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
+      
