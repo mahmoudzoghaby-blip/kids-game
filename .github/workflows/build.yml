@@ -25,49 +25,21 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-      - name: Recreate Clean Android Platform & Fix SDK via Python
+      - name: Configure Gradle and SDK Version
         run: |
-          rm -rf android
-          flutter create . --platforms=android --project-name=kids_game
-
-          mkdir -p android/gradle/wrapper
-          cat << 'EOF' > android/gradle/wrapper/gradle-wrapper.properties
-          distributionBase=GRADLE_USER_HOME
-          distributionPath=wrapper/dists
-          distributionUrl=https\://services.gradle.org/distributions/gradle-7.6.3-bin.zip
-          zipStoreBase=GRADLE_USER_HOME
-          zipStorePath=wrapper/dists
-          EOF
-
+          # رفع الـ minSdkVersion إلى 24 لتوافق جميع الحزم الحديثة وتجنب أخطاء البناء
           mkdir -p android
-          touch android/gradle.properties
-          if ! grep -q "flutter.minSdkVersion" android/gradle.properties; then
-            echo "flutter.minSdkVersion=21" >> android/gradle.properties
+          if [ -f "android/gradle.properties" ]; then
+            sed -i 's/flutter.minSdkVersion=.*/flutter.minSdkVersion=24/g' android/gradle.properties
+            if ! grep -q "flutter.minSdkVersion" android/gradle.properties; then
+              echo "flutter.minSdkVersion=24" >> android/gradle.properties
+            fi
+          else
+            echo "flutter.minSdkVersion=24" > android/gradle.properties
           fi
 
-          # استخدام سكريبت بايثون لتعديل ملف build.gradle بدقة تامة ومنع أخطاء الـ sed
-          python3 -c '
-          import re
-          build_path = "android/app/build.gradle"
-          with open(build_path, "r") as f:
-              content = f.read()
-
-          if "namespace" not in content:
-              content = content.replace("android {", "android {\n    namespace \"com.example.kids_game\"")
-
-          content = re.sub(r"minSdkVersion\s+.*", "minSdkVersion 21", content)
-
-          with open(build_path, "w") as f:
-              f.write(content)
-          '
-
-          chmod +x android/gradlew
-
-      - name: Clean and Build APK Release
-        run: |
-          flutter clean
-          flutter pub get
-          flutter build apk --release --no-tree-shake-icons
+      - name: Build APK Release
+        run: flutter build apk --release --no-tree-shake-icons
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
