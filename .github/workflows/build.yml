@@ -25,21 +25,62 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-      - name: Configure Gradle and SDK Version
+      - name: Fix Android Project & Dependencies via Python
         run: |
-          # رفع الـ minSdkVersion إلى 24 لتوافق جميع الحزم الحديثة وتجنب أخطاء البناء
-          mkdir -p android
-          if [ -f "android/gradle.properties" ]; then
-            sed -i 's/flutter.minSdkVersion=.*/flutter.minSdkVersion=24/g' android/gradle.properties
-            if ! grep -q "flutter.minSdkVersion" android/gradle.properties; then
-              echo "flutter.minSdkVersion=24" >> android/gradle.properties
-            fi
-          else
-            echo "flutter.minSdkVersion=24" > android/gradle.properties
-          fi
+          rm -rf android
+          flutter create . --platforms=android --project-name=kids_game
 
-      - name: Build APK Release
-        run: flutter build apk --release --no-tree-shake-icons
+          mkdir -p android/gradle/wrapper
+          cat << 'EOF' > android/gradle/wrapper/gradle-wrapper.properties
+          distributionBase=GRADLE_USER_HOME
+          distributionPath=wrapper/dists
+          distributionUrl=https\://services.gradle.org/distributions/gradle-7.6.3-bin.zip
+          zipStoreBase=GRADLE_USER_HOME
+          zipStorePath=wrapper/dists
+          EOF
+
+          mkdir -p android
+          touch android/gradle.properties
+          echo "flutter.minSdkVersion=24" >> android/gradle.properties
+
+          # سكريبت بايثون لتعديل ملفات الـ Gradle وحل أي تعارض في إصدارات Kotlin و namespace و SDK
+          python3 -c '
+          import re
+
+          # 1. تعديل android/app/build.gradle
+          app_build = "android/app/build.gradle"
+          with open(app_build, "r") as f:
+              content = f.read()
+
+          if "namespace" not in content:
+              content = content.replace("android {", "android {\n    namespace \"com.example.kids_game\"")
+
+          content = re.sub(r"minSdkVersion\s+.*", "minSdkVersion 24", content)
+          
+          with open(app_build, "w") as f:
+              f.write(content)
+
+          # 2. تعديل android/build.gradle لتثبيت إصدار كوتلن مستقر متوافق مع جافا 17
+          project_build = "android/build.gradle"
+          with open(project_build, "r") as f:
+              p_content = f.read()
+
+          if "kotlin_version" in p_content:
+              p_content = re.sub(r"kotlin_version\s*=\s*[\x27\x22].*?[\x27\x22]", "kotlin_version = '\''1.8.22'\''", p_content)
+          elif "ext.kotlin_version" in p_content:
+              p_content = re.sub(r"ext.kotlin_version\s*=\s*[\x27\x22].*?[\x27\x22]", "ext.kotlin_version = '\''1.8.22'\''", p_content)
+
+          with open(project_build, "w") as f:
+              f.write(p_content)
+          '
+
+          chmod +x android/gradlew
+
+      - name: Clean and Build APK Release
+        run: |
+          flutter clean
+          flutter pub get
+          flutter build apk --release --no-tree-shake-icons
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
