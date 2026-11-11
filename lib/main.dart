@@ -34,92 +34,96 @@ class GameModeScreen extends StatelessWidget {
       ),
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blueAccent, Colors.purpleAccent],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+          image: DecorationImage(
+            image: NetworkImage('https://img.freepik.com/free-vector/hand-drawn-children-s-day-background_23-2149383816.jpg'),
+            fit: BoxFit.cover,
           ),
         ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'اختر قسم التعلم',
-                    style: TextStyle(fontSize: 28, color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 25),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                      backgroundColor: Colors.amber,
-                      foregroundColor: Colors.black,
-                      textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                      minimumSize: const Size(280, 55),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.3), // طبقة تععتيم خفيفة لإظهار الأزرار بوضوح
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'اختر قسم التعلم',
+                      style: TextStyle(fontSize: 28, color: Colors.white, fontWeight: FontWeight.bold, shadows: [Shadow(blurRadius: 10, color: Colors.black)]),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const GameScreen(gameType: GameType.arabicLetters)),
-                      );
-                    },
-                    child: const Text('لعبة الحروف العربية'),
-                  ),
-                  const SizedBox(height: 15),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                      backgroundColor: Colors.cyanAccent,
-                      foregroundColor: Colors.black,
-                      textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                      minimumSize: const Size(280, 55),
+                    const SizedBox(height: 25),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        backgroundColor: Colors.amber,
+                        foregroundColor: Colors.black,
+                        textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        minimumSize: const Size(280, 55),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const GameScreen(gameType: GameType.arabicLetters)),
+                        );
+                      },
+                      child: const Text('لعبة الحروف العربية'),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const GameScreen(gameType: GameType.englishLetters)),
-                      );
-                    },
-                    child: const Text('لعبة الحروف الإنجليزية'),
-                  ),
-                  const SizedBox(height: 15),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                      backgroundColor: Colors.greenAccent,
-                      foregroundColor: Colors.black,
-                      textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                      minimumSize: const Size(280, 55),
+                    const SizedBox(height: 15),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        backgroundColor: Colors.cyanAccent,
+                        foregroundColor: Colors.black,
+                        textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        minimumSize: const Size(280, 55),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const GameScreen(gameType: GameType.englishLetters)),
+                        );
+                      },
+                      child: const Text('لعبة الحروف الإنجليزية'),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const GameScreen(gameType: GameType.numbers)),
-                      );
-                    },
-                    child: const Text('لعبة الأرقام (من 1 إلى 50)'),
-                  ),
-                  const SizedBox(height: 15),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                      backgroundColor: Colors.orangeAccent,
-                      foregroundColor: Colors.black,
-                      textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                      minimumSize: const Size(280, 55),
+                    const SizedBox(height: 15),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        backgroundColor: Colors.greenAccent,
+                        foregroundColor: Colors.black,
+                        textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        minimumSize: const Size(280, 55),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const GameScreen(gameType: GameType.numbers)),
+                        );
+                      },
+                      child: const Text('لعبة الأرقام (من 1 إلى 50)'),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const GameScreen(gameType: GameType.animals)),
-                      );
-                    },
-                    child: const Text('لعبة الحيوانات'),
-                  ),
-                ],
+                    const SizedBox(height: 15),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        backgroundColor: Colors.orangeAccent,
+                        foregroundColor: Colors.black,
+                        textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        minimumSize: const Size(280, 55),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const GameScreen(gameType: GameType.animals)),
+                        );
+                      },
+                      child: const Text('لعبة الحيوانات'),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -216,7 +220,7 @@ class _GameScreenState extends State<GameScreen> {
     if (widget.gameType == GameType.englishLetters) {
       await flutterTts.setLanguage("en-US");
     } else {
-      await flutterTts.setLanguage("ar-SA");
+      await flutterTts.setLanguage("ar-EG"); // ضبط اللهجة المصرية للأطفال
     }
     await flutterTts.setSpeechRate(0.4);
   }
@@ -225,7 +229,7 @@ class _GameScreenState extends State<GameScreen> {
     if (isEnglish) {
       await flutterTts.setLanguage("en-US");
     } else {
-      await flutterTts.setLanguage("ar-SA");
+      await flutterTts.setLanguage("ar-EG"); // باللهجة المصرية
     }
     await flutterTts.speak(text);
   }
@@ -243,14 +247,14 @@ class _GameScreenState extends State<GameScreen> {
     setState(() {});
 
     if (widget.gameType == GameType.animals) {
-      speak("أين حيوان ${currentTarget.name}");
+      speak("فين حيوان ${currentTarget.name}"); // باللهجة المصرية الطبيعية
     } else if (widget.gameType == GameType.numbers) {
-      speak("أين الرقم $currentTarget");
+      speak("فين الرقم $currentTarget");
     } else if (widget.gameType == GameType.englishLetters) {
       speak("Where is letter");
       speak(currentTarget, isEnglish: true);
     } else {
-      speak("أين حرف $currentTarget");
+      speak("فين حرف $currentTarget");
     }
   }
 
@@ -258,9 +262,9 @@ class _GameScreenState extends State<GameScreen> {
     bool isCorrect = (selected == currentTarget);
 
     if (isCorrect) {
-      speak("ممتاز! إجابة صحيحة");
+      speak("برافو عليك! إجابة ممتازة");
     } else {
-      speak("حاول مرة أخرى");
+      speak("حاول مرة كمان يا بطل");
     }
 
     String correctText = widget.gameType == GameType.animals ? currentTarget.name : currentTarget;
@@ -269,9 +273,9 @@ class _GameScreenState extends State<GameScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: Text(isCorrect ? 'أحسنت بطل! 🎉' : 'خطأ، حاول مرة أخرى ❌', textAlign: TextAlign.center),
+        title: Text(isCorrect ? 'أحسنت يا بطل! 🎉' : 'خطأ، حاول مرة كمان ❌', textAlign: TextAlign.center),
         content: Text(
-          isCorrect ? 'إجابة صحيحة!' : 'الخيار المطلوب كان: $correctText',
+          isCorrect ? 'إجابة صحيحة وراااائعة!' : 'الاختيار الصحيح كان: $correctText',
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 18),
         ),
@@ -286,134 +290,5 @@ class _GameScreenState extends State<GameScreen> {
                   generateNewQuestion();
                 });
               },
-              child: const Text('السؤال التالي'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String getTitle() {
-    if (widget.gameType == GameType.numbers) return 'لعبة الأرقام (1-50)';
-    if (widget.gameType == GameType.arabicLetters) return 'لعبة الحروف العربية';
-    if (widget.gameType == GameType.englishLetters) return 'لعبة الحروف الإنجليزية';
-    return 'لعبة الحيوانات';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    bool isEnglish = widget.gameType == GameType.englishLetters;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(getTitle()),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.star, color: Colors.amber, size: 36),
-                    const SizedBox(width: 8),
-                    Text(
-                      '$score',
-                      style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                IconButton(
-                  icon: const Icon(Icons.volume_up, size: 36, color: Colors.indigo),
-                  onPressed: () {
-                    if (widget.gameType == GameType.animals) {
-                      speak(currentTarget.name);
-                    } else {
-                      speak(currentTarget, isEnglish: isEnglish);
-                    }
-                  },
-                )
-              ],
-            ),
-            const SizedBox(height: 20),
-            Text(
-              widget.gameType == GameType.animals ? 'اختر صورة الحيوان الصحيح:' : 'اختر المطلوب:',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.grey),
-            ),
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Colors.indigo.shade50,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.indigo, width: 3),
-              ),
-              child: Text(
-                widget.gameType == GameType.animals ? currentTarget.emoji : currentTarget,
-                style: TextStyle(
-                  fontSize: widget.gameType == GameType.animals ? 64 : 64,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.indigo,
-                ),
-              ),
-            ),
-            const SizedBox(height: 40),
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              children: [
-                buildOptionCard(options[0], Colors.pinkAccent),
-                buildOptionCard(options[1], Colors.orangeAccent),
-                buildOptionCard(options[2], Colors.greenAccent),
-                buildOptionCard(options[3], Colors.purpleAccent),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildOptionCard(dynamic item, Color color) {
-    bool isEnglish = widget.gameType == GameType.englishLetters;
-    String displayText = widget.gameType == GameType.animals ? item.emoji : item;
-    String speakText = widget.gameType == GameType.animals ? item.name : item;
-
-    return GestureDetector(
-      onTap: () {
-        speak(speakText, isEnglish: isEnglish);
-        checkAnswer(item);
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 6, offset: const Offset(0, 4)),
-          ],
-        ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              displayText,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: widget.gameType == GameType.animals ? 56 : 42,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+              child: const Text
+              
